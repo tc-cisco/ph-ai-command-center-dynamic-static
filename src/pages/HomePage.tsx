@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 
-import { Text, Button, Chip } from '@momentum-design/components/react';
+import { Text, Button } from '@momentum-design/components/react';
 import './homepage.css';
 
 const HomePage: React.FC = () => {
@@ -12,6 +12,7 @@ const HomePage: React.FC = () => {
     const [showCustomerSummary, setShowCustomerSummary] = useState(false);
     const [showCustomerGroups, setShowCustomerGroups] = useState(false);
     const [showMeetingsAnalysis, setShowMeetingsAnalysis] = useState(false);
+    const [viewMode, setViewMode] = useState<'workspace' | 'control-center'>('workspace');
     const contextMenuRef = useRef<HTMLDivElement>(null);
     const searchInputRef = useRef<HTMLInputElement>(null);
     const mainSearchInputRef = useRef<HTMLInputElement>(null);
@@ -408,16 +409,24 @@ const HomePage: React.FC = () => {
     return (
         <div className="home-page-wrapper">
                 <div className="home-page-content">
-            <div className="home-page-header">
-                <div className="home-page-middle-section">
-                    <div className="home-page-middle-section-first-line">
-                                <Text type="heading-midsize-bold" tagname='span'>Welcome back Molly</Text>
-                        {/* TODO: make this a static chip without interaction */}
-                                <Chip label='Partner full admin'></Chip>
-                    </div>
-                </div>
+            {/* View Mode Toggle - fixed position, centered on page */}
+            <div className="view-mode-toggle">
+                <button 
+                    className={`toggle-option ${viewMode === 'workspace' ? 'active' : ''}`}
+                    onClick={() => setViewMode('workspace')}
+                >
+                    Workspace
+                </button>
+                <button 
+                    className={`toggle-option ${viewMode === 'control-center' ? 'active' : ''}`}
+                    onClick={() => setViewMode('control-center')}
+                >
+                    Overview
+                </button>
             </div>
-            <div className="home-page-top-search">
+
+            {/* WORKSPACE VIEW - Dynamic UI */}
+            <div className="home-page-top-search" style={{ display: viewMode === 'workspace' ? 'flex' : 'none' }}>
                 <div className="top-search-container">
                     <Text type="heading-midsize-bold" tagname='h2' className="top-search-title">Find what you need</Text>
                     <Text type="body-midsize-medium" tagname='p' className="top-search-subtitle">Ask, find, or act across across customers, groups, and insights</Text>
@@ -619,7 +628,7 @@ const HomePage: React.FC = () => {
                 </div>
                 
                 {/* Customer Summary Panel */}
-                {showCustomerSummary && (
+                {viewMode === 'workspace' && showCustomerSummary && (
                     <div className="customer-summary-panel">
                         <div className="panel-header">
                             <Text type="heading-small-bold" tagname="h3">Customer Summary</Text>
@@ -711,7 +720,7 @@ const HomePage: React.FC = () => {
                 )}
 
                 {/* Customer Groups Panel */}
-                {showCustomerGroups && (
+                {viewMode === 'workspace' && showCustomerGroups && (
                     <div className="customer-groups-panel">
                         <div className="panel-header">
                             <Text type="heading-small-bold" tagname="h3">Favorite customer groups</Text>
@@ -843,7 +852,7 @@ const HomePage: React.FC = () => {
                 )}
 
                 {/* Meetings Analysis Panel */}
-                {showMeetingsAnalysis && (
+                {viewMode === 'workspace' && showMeetingsAnalysis && (
                     <div className="meetings-analysis-panel">
                         <div className="panel-header">
                             <Text type="heading-small-bold" tagname="h3">Meeting Insights</Text>
@@ -945,6 +954,159 @@ const HomePage: React.FC = () => {
                 </div>
             </div>
                 )}
+
+            {/* OVERVIEW VIEW - Static Dashboard */}
+            {viewMode === 'control-center' && (
+                <div className="overview-dashboard">
+                    {/* High-Level Metrics */}
+                    <div className="metrics-section">
+                        <div className="metric-card">
+                            <div className="metric-value-large">847</div>
+                            <div className="metric-label-large">Total Customers</div>
+                            <div className="metric-trend positive">↑ 12 this month</div>
+                        </div>
+                        <div className="metric-card">
+                            <div className="metric-value-large">$2.4M</div>
+                            <div className="metric-label-large">Monthly Revenue</div>
+                            <div className="metric-trend positive">↑ 8% vs last month</div>
+                        </div>
+                        <div className="metric-card">
+                            <div className="metric-value-large">94%</div>
+                            <div className="metric-label-large">Avg Health Score</div>
+                            <div className="metric-trend neutral">→ No change</div>
+                        </div>
+                        <div className="metric-card">
+                            <div className="metric-value-large">23</div>
+                            <div className="metric-label-large">Pending Actions</div>
+                            <div className="metric-trend negative">↑ 5 new today</div>
+                        </div>
+                    </div>
+
+                    <div className="dashboard-grid">
+                        {/* Portfolio Health Signals */}
+                        <div className="dashboard-card health-signals">
+                            <div className="card-header">
+                                <h3>Portfolio Health Signals</h3>
+                            </div>
+                            <div className="card-content">
+                                <div className="health-item critical">
+                                    <div className="health-indicator"></div>
+                                    <div className="health-info">
+                                        <span className="health-count">7</span>
+                                        <span className="health-label">Critical - Immediate attention needed</span>
+                                    </div>
+                                </div>
+                                <div className="health-item warning">
+                                    <div className="health-indicator"></div>
+                                    <div className="health-info">
+                                        <span className="health-count">23</span>
+                                        <span className="health-label">At Risk - Renewal concerns</span>
+                                    </div>
+                                </div>
+                                <div className="health-item attention">
+                                    <div className="health-indicator"></div>
+                                    <div className="health-info">
+                                        <span className="health-count">45</span>
+                                        <span className="health-label">Needs Attention - Low adoption</span>
+                                    </div>
+                                </div>
+                                <div className="health-item healthy">
+                                    <div className="health-indicator"></div>
+                                    <div className="health-info">
+                                        <span className="health-count">772</span>
+                                        <span className="health-label">Healthy - On track</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Suggested Actions */}
+                        <div className="dashboard-card suggested-actions">
+                            <div className="card-header">
+                                <h3>Suggested Actions</h3>
+                                <span className="action-count">23 pending</span>
+                            </div>
+                            <div className="card-content">
+                                <div className="action-item priority-high">
+                                    <div className="action-priority">HIGH</div>
+                                    <div className="action-details">
+                                        <div className="action-title">Contact Meridian Corp about renewal</div>
+                                        <div className="action-meta">Renewal in 14 days • $45K ARR</div>
+                                    </div>
+                                </div>
+                                <div className="action-item priority-high">
+                                    <div className="action-priority">HIGH</div>
+                                    <div className="action-details">
+                                        <div className="action-title">Review Apex Industries license usage</div>
+                                        <div className="action-meta">Usage dropped 40% • At risk</div>
+                                    </div>
+                                </div>
+                                <div className="action-item priority-medium">
+                                    <div className="action-priority">MED</div>
+                                    <div className="action-details">
+                                        <div className="action-title">Schedule QBR with TechFlow Inc</div>
+                                        <div className="action-meta">Last QBR: 4 months ago</div>
+                                    </div>
+                                </div>
+                                <div className="action-item priority-medium">
+                                    <div className="action-priority">MED</div>
+                                    <div className="action-details">
+                                        <div className="action-title">Upsell opportunity at DataBridge</div>
+                                        <div className="action-meta">90% license utilization</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="card-footer">
+                                <button className="view-all-btn">View all actions →</button>
+                            </div>
+                        </div>
+
+                        {/* Recent Partner Activity */}
+                        <div className="dashboard-card recent-activity">
+                            <div className="card-header">
+                                <h3>Recent Activity</h3>
+                            </div>
+                            <div className="card-content">
+                                <div className="activity-item">
+                                    <div className="activity-icon provisioned"></div>
+                                    <div className="activity-details">
+                                        <div className="activity-text"><strong>New customer provisioned:</strong> CloudFirst Solutions</div>
+                                        <div className="activity-time">2 hours ago</div>
+                                    </div>
+                                </div>
+                                <div className="activity-item">
+                                    <div className="activity-icon renewed"></div>
+                                    <div className="activity-details">
+                                        <div className="activity-text"><strong>Renewal completed:</strong> Summit Healthcare ($120K)</div>
+                                        <div className="activity-time">5 hours ago</div>
+                                    </div>
+                                </div>
+                                <div className="activity-item">
+                                    <div className="activity-icon alert"></div>
+                                    <div className="activity-details">
+                                        <div className="activity-text"><strong>Health alert:</strong> Velocity Logistics usage declined 35%</div>
+                                        <div className="activity-time">Yesterday</div>
+                                    </div>
+                                </div>
+                                <div className="activity-item">
+                                    <div className="activity-icon upgraded"></div>
+                                    <div className="activity-details">
+                                        <div className="activity-text"><strong>License upgrade:</strong> Pinnacle Finance (+50 seats)</div>
+                                        <div className="activity-time">Yesterday</div>
+                                    </div>
+                                </div>
+                                <div className="activity-item">
+                                    <div className="activity-icon support"></div>
+                                    <div className="activity-details">
+                                        <div className="activity-text"><strong>Support escalation resolved:</strong> Metro Industries</div>
+                                        <div className="activity-time">2 days ago</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

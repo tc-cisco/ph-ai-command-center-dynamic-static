@@ -13,7 +13,7 @@ interface MainLayoutProps {
 }
 
 const MainLayout: React.FC<MainLayoutProps> = ({ children, theme, setTheme, currentPage, onPageChange }) => {
-  const [isSideNavExpanded, setIsSideNavExpanded] = useState(true)
+  const [isSideNavExpanded, setIsSideNavExpanded] = useState(false)
   return (
     <div className="background-base">
       <div className="background">
