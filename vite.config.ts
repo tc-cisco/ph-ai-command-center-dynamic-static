@@ -115,6 +115,7 @@ function rewriteDynamicImportsRollup({packageName}: {packageName?: 'animations' 
 }
 
 export default defineConfig({
+  base: '/ph-ai-command-center-dynamic-static/',
   plugins: [
     react(),
   ],

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, Button, Icon } from '@momentum-design/components/react';
+import { Button, Icon } from '@momentum-design/components/react';
 import './labs.css';
 
 const LabsPage: React.FC = () => {
@@ -278,7 +278,7 @@ Best regards,
                 <div className="experiment-card">
                     <div className="experiment-header">
                         <div className="experiment-title-row">
-                            <Icon name="lightbulb-regular" className="experiment-icon" />
+                            <Icon name="info-badge-filled" className="experiment-icon" />
                             <h2 className="experiment-title">Automated Insights Generator</h2>
                         </div>
                         <div className="experiment-status experiment-status--alpha">
@@ -300,7 +300,7 @@ Best regards,
                         >
                             {experiment2Active ? (
                                 <>
-                                    <Icon name="spinner-regular" className="spinning" />
+                                    <Icon name="refresh-regular" className="spinning" />
                                     Generating Insights...
                                 </>
                             ) : (

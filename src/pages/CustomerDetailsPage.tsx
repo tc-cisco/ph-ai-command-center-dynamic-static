@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Icon, Chip } from '@momentum-design/components/react';
+import { Icon } from '@momentum-design/components/react';
 import './customerdetails.css';
 
 // MDS Illustrations
