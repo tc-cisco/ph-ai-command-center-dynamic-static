@@ -1,0 +1,609 @@
+/* Labs Page - Matching Customers Page Design */
+
+.labs-page {
+    --local-padding: 1.5rem;
+    height: calc(100% - 2 * var(--local-padding));
+    width: calc(100% - 2 * var(--local-padding));
+    border-top-left-radius: 1rem;
+    background-color: var(--mds-color-theme-background-glass-light);
+    backdrop-filter: blur(400px);
+    padding: var(--local-padding);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    overflow-y: auto;
+}
+
+/* Dark mode support */
+.mds-theme-stable-darkWebex .labs-page {
+    background-color: var(--mds-color-theme-background-glass-dark);
+}
+
+/* Page Header */
+.labs-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+    flex-shrink: 0;
+}
+
+.page-title {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 1.25;
+    color: var(--mds-color-theme-text-primary-normal, rgba(0,0,0,0.95));
+    margin: 0;
+}
+
+/* Dark mode support for title */
+.mds-theme-stable-darkWebex .page-title {
+    color: var(--mds-color-theme-text-primary-normal, rgba(255,255,255,0.95));
+}
+
+/* Tab Navigation */
+.tab-navigation {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.tab {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 24px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1.5;
+    transition: all 0.2s ease;
+    background: transparent;
+    color: var(--mds-color-theme-text-secondary-normal, rgba(0,0,0,0.7));
+    border: none;
+}
+
+.tab--active {
+    background: var(--mds-color-theme-button-secondary-active-normal, rgba(0,0,0,0.2));
+    color: var(--mds-color-theme-text-primary-normal, rgba(0,0,0,0.95));
+}
+
+.tab__icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
+/* Dark mode support for tabs */
+.mds-theme-stable-darkWebex .tab {
+    color: var(--mds-color-theme-text-secondary-normal, rgba(255,255,255,0.7));
+}
+
+.mds-theme-stable-darkWebex .tab--active {
+    background: var(--mds-color-theme-button-secondary-active-normal, rgba(255,255,255,0.2));
+    color: var(--mds-color-theme-text-primary-normal, rgba(255,255,255,0.95));
+}
+
+/* Labs Description */
+.labs-description {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--mds-color-theme-text-secondary-normal, rgba(0,0,0,0.7));
+    max-width: 800px;
+}
+
+.mds-theme-stable-darkWebex .labs-description {
+    color: var(--mds-color-theme-text-secondary-normal, rgba(255,255,255,0.7));
+}
+
+/* Experiments Container */
+.experiments-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Priority Tasks Card - Simple To-Do Style */
+.priority-tasks-card {
+    background: var(--mds-color-theme-background-solid-primary-normal, #ffffff);
+    border: 1px solid var(--mds-color-theme-outline-secondary-normal, rgba(0,0,0,0.2));
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.mds-theme-stable-darkWebex .priority-tasks-card {
+    background: var(--mds-color-theme-background-solid-primary-normal, #000000);
+    border-color: var(--mds-color-theme-outline-secondary-normal, rgba(255,255,255,0.2));
+}
+
+.priority-tasks-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--mds-color-theme-outline-secondary-normal, rgba(0,0,0,0.1));
+}
+
+.mds-theme-stable-darkWebex .priority-tasks-header {
+    border-bottom-color: var(--mds-color-theme-outline-secondary-normal, rgba(255,255,255,0.1));
+}
+
+.priority-tasks-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.4;
+    color: var(--mds-color-theme-text-primary-normal, rgba(0,0,0,0.95));
+    margin: 0;
+}
+
+.mds-theme-stable-darkWebex .priority-tasks-title {
+    color: var(--mds-color-theme-text-primary-normal, rgba(255,255,255,0.95));
+}
+
+.task-count {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: var(--mds-color-theme-text-secondary-normal, rgba(0,0,0,0.7));
+}
+
+.mds-theme-stable-darkWebex .task-count {
+    color: var(--mds-color-theme-text-secondary-normal, rgba(255,255,255,0.7));
+}
+
+/* Simple Tasks List */
+.simple-tasks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 16px;
+}
+
+.simple-task-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 8px;
+    border-radius: 6px;
+    transition: background-color 0.15s ease;
+}
+
+.simple-task-item:hover {
+    background: var(--mds-color-theme-background-secondary-hover-normal, rgba(0,0,0,0.02));
+}
+
+.mds-theme-stable-darkWebex .simple-task-item:hover {
+    background: var(--mds-color-theme-background-secondary-hover-normal, rgba(255,255,255,0.02));
+}
+
+.task-checkbox {
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    margin: 0;
+    cursor: pointer;
+    accent-color: var(--mds-color-theme-button-accent-normal, #1170cf);
+}
+
+.task-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
+    margin-left: 12px;
+    cursor: pointer;
+    gap: 12px;
+}
+
+.task-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--mds-color-theme-text-primary-normal, rgba(0,0,0,0.95));
+    flex: 1;
+}
+
+.mds-theme-stable-darkWebex .task-text {
+    color: var(--mds-color-theme-text-primary-normal, rgba(255,255,255,0.95));
+}
+
+.task-checkbox:checked + .task-label .task-text {
+    text-decoration: line-through;
+    color: var(--mds-color-theme-text-secondary-normal, rgba(0,0,0,0.5));
+}
+
+.mds-theme-stable-darkWebex .task-checkbox:checked + .task-label .task-text {
+    color: var(--mds-color-theme-text-secondary-normal, rgba(255,255,255,0.5));
+}
+
+.task-badge {
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+.task-badge.high {
+    background: rgba(214, 37, 24, 0.1);
+    color: #d62518;
+}
+
+.task-badge.medium {
+    background: rgba(255, 150, 0, 0.1);
+    color: #d67c00;
+}
+
+.task-badge.low {
+    background: rgba(92, 184, 92, 0.1);
+    color: #3d8b3d;
+}
+
+/* Priority Tasks Footer */
+.priority-tasks-footer {
+    padding-top: 12px;
+    border-top: 1px solid var(--mds-color-theme-outline-secondary-normal, rgba(0,0,0,0.1));
+}
+
+.mds-theme-stable-darkWebex .priority-tasks-footer {
+    border-top-color: var(--mds-color-theme-outline-secondary-normal, rgba(255,255,255,0.1));
+}
+
+.tasks-note {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--mds-color-theme-text-secondary-normal, rgba(0,0,0,0.7));
+}
+
+.mds-theme-stable-darkWebex .tasks-note {
+    color: var(--mds-color-theme-text-secondary-normal, rgba(255,255,255,0.7));
+}
+
+/* Experiment Card */
+.experiment-card {
+    background: var(--mds-color-theme-background-solid-primary-normal, #ffffff);
+    border: 1px solid var(--mds-color-theme-outline-secondary-normal, rgba(0,0,0,0.2));
+    border-radius: 8px;
+    padding: 20px;
+    transition: all 0.2s ease;
+}
+
+.experiment-card:hover {
+    border-color: var(--mds-color-theme-outline-primary-normal, rgba(0,0,0,0.46));
+}
+
+.mds-theme-stable-darkWebex .experiment-card {
+    background: var(--mds-color-theme-background-solid-primary-normal, #000000);
+    border-color: var(--mds-color-theme-outline-secondary-normal, rgba(255,255,255,0.2));
+}
+
+.mds-theme-stable-darkWebex .experiment-card:hover {
+    border-color: var(--mds-color-theme-outline-primary-normal, rgba(255,255,255,0.46));
+}
+
+/* Experiment Header */
+.experiment-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.experiment-title-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.experiment-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    color: var(--mds-color-theme-text-primary-normal, rgba(0,0,0,0.95));
+}
+
+.mds-theme-stable-darkWebex .experiment-icon {
+    color: var(--mds-color-theme-text-primary-normal, rgba(255,255,255,0.95));
+}
+
+.experiment-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.4;
+    color: var(--mds-color-theme-text-primary-normal, rgba(0,0,0,0.95));
+    margin: 0;
+}
+
+.mds-theme-stable-darkWebex .experiment-title {
+    color: var(--mds-color-theme-text-primary-normal, rgba(255,255,255,0.95));
+}
+
+/* Experiment Status Badges */
+.experiment-status {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+.experiment-status--beta {
+    background: rgba(0, 150, 255, 0.1);
+    color: #0070d2;
+    border: 1px solid rgba(0, 150, 255, 0.3);
+}
+
+.experiment-status--alpha {
+    background: rgba(255, 150, 0, 0.1);
+    color: #d67c00;
+    border: 1px solid rgba(255, 150, 0, 0.3);
+}
+
+.experiment-status--experimental {
+    background: rgba(123, 79, 255, 0.1);
+    color: #6847cc;
+    border: 1px solid rgba(123, 79, 255, 0.3);
+}
+
+/* Experiment Description */
+.experiment-description {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--mds-color-theme-text-secondary-normal, rgba(0,0,0,0.7));
+    margin: 0 0 16px 0;
+}
+
+.mds-theme-stable-darkWebex .experiment-description {
+    color: var(--mds-color-theme-text-secondary-normal, rgba(255,255,255,0.7));
+}
+
+/* Experiment Interaction */
+.experiment-interaction {
+    margin-bottom: 16px;
+}
+
+.input-group {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.experiment-input {
+    flex: 1;
+    height: 32px;
+    padding: 5.5px 12px;
+    border: 1px solid var(--mds-color-theme-outline-input-normal, rgba(0,0,0,0.5));
+    border-radius: 8px;
+    background: var(--mds-color-theme-background-solid-primary-normal, #ffffff);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--mds-color-theme-text-primary-normal, rgba(0,0,0,0.95));
+    box-sizing: border-box;
+}
+
+.experiment-input::placeholder {
+    color: var(--mds-color-theme-text-secondary-normal, rgba(0,0,0,0.7));
+}
+
+.experiment-input:focus {
+    outline: none;
+    border-color: var(--mds-color-theme-button-accent-normal, #1170cf);
+    box-shadow: 0 0 0 2px rgba(17, 112, 207, 0.2);
+}
+
+.mds-theme-stable-darkWebex .experiment-input {
+    background: var(--mds-color-theme-background-solid-primary-normal, #000000);
+    border-color: var(--mds-color-theme-outline-input-normal, rgba(255,255,255,0.5));
+    color: var(--mds-color-theme-text-primary-normal, rgba(255,255,255,0.95));
+}
+
+.mds-theme-stable-darkWebex .experiment-input::placeholder {
+    color: var(--mds-color-theme-text-secondary-normal, rgba(255,255,255,0.7));
+}
+
+.generate-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.spinning {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Output */
+.experiment-output {
+    background: var(--mds-color-theme-background-secondary-normal, #f7f7f7);
+    border: 1px solid var(--mds-color-theme-outline-secondary-normal, rgba(0,0,0,0.2));
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 16px;
+}
+
+.mds-theme-stable-darkWebex .experiment-output {
+    background: rgba(255,255,255,0.05);
+    border-color: var(--mds-color-theme-outline-secondary-normal, rgba(255,255,255,0.2));
+}
+
+.output-text {
+    color: var(--mds-color-theme-text-primary-normal, rgba(0,0,0,0.95));
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    margin: 0;
+}
+
+.mds-theme-stable-darkWebex .output-text {
+    color: var(--mds-color-theme-text-primary-normal, rgba(255,255,255,0.95));
+}
+
+.output-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--mds-color-theme-outline-secondary-normal, rgba(0,0,0,0.2));
+}
+
+.mds-theme-stable-darkWebex .output-actions {
+    border-top-color: var(--mds-color-theme-outline-secondary-normal, rgba(255,255,255,0.2));
+}
+
+/* Experiment Footer */
+.experiment-footer {
+    padding-top: 12px;
+    border-top: 1px solid var(--mds-color-theme-outline-secondary-normal, rgba(0,0,0,0.1));
+}
+
+.mds-theme-stable-darkWebex .experiment-footer {
+    border-top-color: var(--mds-color-theme-outline-secondary-normal, rgba(255,255,255,0.1));
+}
+
+.experiment-note {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--mds-color-theme-text-secondary-normal, rgba(0,0,0,0.7));
+    font-style: italic;
+}
+
+.mds-theme-stable-darkWebex .experiment-note {
+    color: var(--mds-color-theme-text-secondary-normal, rgba(255,255,255,0.7));
+}
+
+/* Feedback Section */
+.feedback-section {
+    background: var(--mds-color-theme-background-solid-primary-normal, #ffffff);
+    border: 1px solid var(--mds-color-theme-outline-secondary-normal, rgba(0,0,0,0.2));
+    border-radius: 8px;
+    padding: 24px;
+    text-align: center;
+}
+
+.mds-theme-stable-darkWebex .feedback-section {
+    background: var(--mds-color-theme-background-solid-primary-normal, #000000);
+    border-color: var(--mds-color-theme-outline-secondary-normal, rgba(255,255,255,0.2));
+}
+
+.feedback-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.4;
+    color: var(--mds-color-theme-text-primary-normal, rgba(0,0,0,0.95));
+    margin: 0 0 12px 0;
+}
+
+.mds-theme-stable-darkWebex .feedback-title {
+    color: var(--mds-color-theme-text-primary-normal, rgba(255,255,255,0.95));
+}
+
+.feedback-description {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--mds-color-theme-text-secondary-normal, rgba(0,0,0,0.7));
+    margin: 0 0 20px 0;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.mds-theme-stable-darkWebex .feedback-description {
+    color: var(--mds-color-theme-text-secondary-normal, rgba(255,255,255,0.7));
+}
+
+.feedback-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.feedback-buttons button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Button Disabled State */
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .labs-page {
+        --local-padding: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .labs-page {
+        --local-padding: 0.75rem;
+        gap: 1rem;
+    }
+
+    .input-group {
+        flex-direction: column;
+    }
+
+    .experiment-header {
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+    }
+
+    .feedback-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .task-label {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+}
+
+@media (max-width: 480px) {
+    .labs-page {
+        --local-padding: 0.5rem;
+    }
+
+    .page-title {
+        font-size: 20px;
+    }
+
+    .tab {
+        font-size: 14px;
+        padding: 0.25rem 0.5rem;
+    }
+
+    .experiment-title {
+        font-size: 16px;
+    }
+}
