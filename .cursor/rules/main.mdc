@@ -1,0 +1,188 @@
+---
+alwaysApply: true
+---
+
+# CRITICAL: Surgical Precision Policy for File Changes
+
+## Problem This Solves
+Prevent unintended modifications to pages/components I'm not actively working on. When I ask for a change to "Overview Page", ONLY that page should change - not the stepper on "Create Customer Wizard" or any other page.
+
+## Core Rule: Limit Blast Radius
+
+### ✅ ALLOWED to change WITHOUT asking:
+1. The currently open/focused file in my editor
+2. Colocated files (e.g., if editing `HomePage.tsx`, you can modify `homepage.css`)
+3. New files I explicitly requested
+
+### ⛔ FORBIDDEN without explicit warning + approval:
+1. **Other page components** (`/src/pages/*.tsx`) - NEVER touch pages I'm not working on
+2. **Shared components** (`/src/components/**/*`) 
+3. **Context files** (`/src/contexts/**/*`)
+4. **Layout components** (`/src/layouts/**/*`)
+5. **Any file not currently open in my editor**
+
+## Required Communication Protocol
+
+When a requested change WOULD affect files outside the current scope, you MUST:
+
+### Step 1: STOP and NOTIFY
+Don't make any changes yet. Instead, respond with:
+
+```
+⚠️ SCOPE ALERT: This change requires modifying multiple files
+
+Files that need changes:
+1. [current-file.tsx] - [brief description of change]
+2. [other-file.tsx] - [why this needs to change]
+3. [another-file.tsx] - [why this needs to change]
+
+Reason: [explain why the other files need to change]
+
+Options:
+A) Proceed with all changes (recommended if they're required)
+B) Only modify [current-file.tsx] with [describe alternative/workaround]
+C) Use a different approach: [suggest alternative that minimizes scope]
+
+Would you like to proceed? Reply "A", "B", or "C"
+```
+
+### Step 2: WAIT for my explicit approval
+Do NOT make any changes until I confirm.
+
+### Step 3: After approval, make ONLY the approved changes
+
+## Anti-Patterns to AVOID
+
+❌ **Never do this:**
+- "I've also updated the stepper on CreateWholesaleCustomerWizard.tsx to match" (I didn't ask for this!)
+- "Applied similar pattern to HomePage.tsx" (Only change what I asked!)
+- "Regenerated [component] for consistency" (Don't regenerate unless broken!)
+- Making silent changes to multiple files without listing them first
+
+✅ **Do this instead:**
+- "This only affects HomePage.tsx, proceeding with the change"
+- "I noticed SideNav.tsx uses a similar pattern - would you like me to update that too?"
+- "This change is isolated to the current file"
+
+## Special Cases
+
+### TypeScript/Build Errors
+If my requested change WILL cause TypeScript errors or break the build, notify me:
+
+```
+⚠️ This change will cause a build error in [other-file.tsx] because [reason].
+
+To fix it, I need to also update [other-file.tsx]. 
+
+Proceed with both changes?
+```
+
+### Shared Component API Changes
+If I'm modifying a shared component's props/interface:
+
+```
+⚠️ This component is used in [N] places:
+- HomePage.tsx
+- CreateWholesaleCustomerWizard.tsx
+- [etc.]
+
+Changing its API will require updating all usages. Proceed?
+```
+
+### New Feature Creation
+If I say "create a new [feature/page]" that clearly needs multiple files (routing, nav, etc.), you can outline the full scope upfront but still ask:
+
+```
+Creating a new page requires:
+1. New page component
+2. Route configuration update
+3. Navigation menu update (SideNav.tsx)
+
+Proceed with all three?
+```
+
+## Default Mindset
+
+**"Change only what was asked, nothing more."**
+
+When in doubt, err on the side of asking permission rather than making assumptions about what else should change.
+
+## Examples
+
+### ✅ Good Example
+**Me:** "Add a loading spinner to HomePage.tsx"
+
+**You:** "Adding loading spinner to HomePage.tsx and updating homepage.css with spinner styles. These are the only files affected."
+
+[Makes changes to only those two files]
+
+### ❌ Bad Example
+**Me:** "Add a loading spinner to HomePage.tsx"
+
+**You:** "Added loading spinner to HomePage.tsx, CustomersPage.tsx, and CreateWholesaleCustomerWizard.tsx for consistency"
+
+[This is wrong - I only asked for HomePage!]
+
+### ✅ Good Example with Cross-File Impact
+**Me:** "Update the Header component to show a new notification bell"
+
+**You:** 
+```
+⚠️ SCOPE ALERT: Header.tsx is used in:
+- HomePage.tsx
+- CustomersPage.tsx  
+- CreateWholesaleCustomerWizard.tsx
+
+Modifying Header will affect all these pages. This is probably fine since it's a shared component, but wanted to confirm.
+
+Proceed with updating Header.tsx?
+```
+
+[Waits for my approval]
+
+---
+
+# CRITICAL: Momentum Design Icon Component Usage
+
+## The Problem
+The Momentum Design `<Icon>` component's `size` prop uses **em units, NOT pixels**. This has caused icons to render at massive sizes multiple times.
+
+## The Rule
+
+### ❌ NEVER DO THIS:
+```tsx
+<Icon name="user-regular" size={16} />  // This becomes 16em (huge!)
+<Icon name="help-circle-regular" size={12} />  // This becomes 12em (huge!)
+```
+
+### ✅ ALWAYS DO THIS INSTEAD:
+
+**Option 1 (Preferred): Omit the size prop entirely**
+```tsx
+<Icon name="user-regular" />  // Inherits size from surrounding font-size
+<Icon name="help-circle-regular" className="info-icon" />
+```
+
+**Option 2: Use small decimal values if size control is needed**
+```tsx
+<Icon name="user-regular" size={1} />  // 1em = ~16px
+<Icon name="help-circle-regular" size={0.875} />  // 0.875em = ~14px
+```
+
+## Why This Matters
+
+- The `size` prop is interpreted as **em units** (e.g., `size={16}` = `16em` = ~256px!)
+- Without the `size` prop, icons inherit the font-size from their container (usually 14-16px)
+- This is the intended behavior and works perfectly in most cases
+
+## When Working With Icons
+
+1. **Default approach**: Omit `size` prop and let CSS control the size through font-size
+2. **If icons are too large/small**: Adjust the container's font-size in CSS, NOT the Icon's size prop
+3. **Only use `size` prop with small values**: If absolutely necessary, use values like `1`, `0.875`, `1.125`
+
+## Verification
+Before committing changes with Icon components:
+- Check that no `size` prop has values > 2
+- Prefer omitting `size` entirely
+- Test in browser to ensure icons are appropriately sized

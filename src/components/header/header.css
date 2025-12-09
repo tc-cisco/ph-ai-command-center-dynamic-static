@@ -1,0 +1,64 @@
+.header {
+    height: 4rem;
+}
+
+.leadingSlot {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.brandLogo {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.brandLogo img {
+    max-height: 32px;
+    object-fit: contain;
+}
+
+/* Light mode - show light logo, hide dark logo */
+.brand-logo-light {
+    display: block;
+}
+
+.brand-logo-dark {
+    display: none;
+}
+
+/* Dark mode - show dark logo, hide light logo */
+.mds-theme-stable-darkWebex .brand-logo-light {
+    display: none;
+}
+
+.mds-theme-stable-darkWebex .brand-logo-dark {
+    display: block;
+}
+
+.assistantButton {
+    aspect-ratio: 1 / 1;
+    padding: 0 0.3125rem;
+}
+
+.trailingSlot {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.searchfield {
+    width: 24.5rem;
+}
+
+.badgeButtonWrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+}
