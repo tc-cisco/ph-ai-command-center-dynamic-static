@@ -128,6 +128,7 @@ export default defineConfig({
     },
   },
   build: {
+    outDir: 'docs',
     rollupOptions: {
       plugins: [
         rewriteDynamicImportsRollup({packageName: 'brand-visuals'}), 
