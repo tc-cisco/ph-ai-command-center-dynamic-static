@@ -13,11 +13,11 @@ const HomePage: React.FC = () => {
     const [showCustomerGroups, setShowCustomerGroups] = useState(false);
     const [showMeetingsAnalysis, setShowMeetingsAnalysis] = useState(false);
     const [hasSearchSubmitted, setHasSearchSubmitted] = useState(false);
-    const [showGenericResponse, setShowGenericResponse] = useState(false);
-    const [showRenewalRisk, setShowRenewalRisk] = useState(false);
-    const [showAdoptionGrowth, setShowAdoptionGrowth] = useState(false);
+    const [_showGenericResponse, setShowGenericResponse] = useState(false);
+    const [_showRenewalRisk, setShowRenewalRisk] = useState(false);
+    const [_showAdoptionGrowth, setShowAdoptionGrowth] = useState(false);
     const [selectedGrowthLevel, setSelectedGrowthLevel] = useState<'high-potential' | 'moderate' | 'some-room' | 'optimized'>('high-potential');
-    const [submittedQuery, setSubmittedQuery] = useState('');
+    const [_submittedQuery, setSubmittedQuery] = useState('');
     
     // Chat history state - EASILY REVERTABLE: Remove this and related JSX
     const [chatHistory, setChatHistory] = useState<Array<{ 
@@ -37,7 +37,7 @@ const HomePage: React.FC = () => {
     const [pendingPanel, setPendingPanel] = useState<'renewal' | 'adoption' | null>(null);
     
     // Skeleton loading states for panel components
-    const [isPanelLoading, setIsPanelLoading] = useState(false);
+    const [_isPanelLoading, setIsPanelLoading] = useState(false);
     const [loadedSections, setLoadedSections] = useState({
         header: false,
         summary: false,
@@ -143,7 +143,7 @@ const HomePage: React.FC = () => {
         customer: string;
     } | null>(null);
     const [lastRefreshTime, setLastRefreshTime] = useState<Date>(new Date());
-    const [refreshKey, setRefreshKey] = useState(0);
+    const [_refreshKey, setRefreshKey] = useState(0);
     const [isBasedOnExpanded, setIsBasedOnExpanded] = useState(false);
     const [selectedRiskLevel, setSelectedRiskLevel] = useState<'high' | 'medium' | 'low' | 'healthy' | 'trending'>('high');
     
@@ -636,15 +636,6 @@ const HomePage: React.FC = () => {
                                 query.includes('growth opportunit') ||
                                 query.includes('adoption lift') ||
                                 query.includes('help increase');
-        
-        const isCustomerSummaryQuery = query.includes('summarize how my customers are today') || 
-                                       query.includes('customers are today');
-        
-        const isCustomerGroupsQuery = query.includes('customer groups doing today') || 
-                                      query.includes('how\'s my customer groups');
-        
-        const isMeetingsQuery = query.includes('declining meetings') || 
-                                query.includes('check declining meetings');
         
         // Tab-based logic for renewal/adoption panels
         // Use ref to get latest value (avoid stale closure issues)
@@ -1222,7 +1213,7 @@ const HomePage: React.FC = () => {
                                                 prefixIcon="send-filled" 
                                                 aria-label="send" 
                                                 className="chat-send-btn"
-                                                onClick={handleSendClick}
+                                                onClick={() => handleSendClick()}
                                             />
                                         </div>
                                     </div>
@@ -1352,7 +1343,6 @@ const HomePage: React.FC = () => {
                                     1. Remove this entire openTabs.length > 0 block
                                     2. Replace with the individual showRenewalRisk and showAdoptionGrowth blocks from the backup below
                                 */}
-                                {console.log('🎨 Render check - openTabs:', openTabs, 'isGenerating:', isGenerating, 'activeTab:', activeTab)}
                                 {openTabs.length > 0 && !isGenerating && (
                                     <div className={`workspace-result-panel renewal-risk-panel renewal-risk-v2 ${activeTab === 'adoption' ? 'adoption-growth-panel' : ''}`}>
                                         {/* Unified Tab Bar for all open tabs */}
@@ -2275,7 +2265,7 @@ const HomePage: React.FC = () => {
                                     onKeyDown={handleMainSearchKeyDown}
                                 />
                             </div>
-                            <Button variant="tertiary" size={24} prefixIcon="send-filled" aria-label="send" className="search-send-icon" onClick={handleSendClick}></Button>
+                            <Button variant="tertiary" size={24} prefixIcon="send-filled" aria-label="send" className="search-send-icon" onClick={() => handleSendClick()}></Button>
                         </div>
                     </div>
                 </div>
@@ -2814,7 +2804,7 @@ const HomePage: React.FC = () => {
                                         size={24}
                                         prefixIcon="refresh-regular"
                                         aria-label="Refresh"
-                                        onPress={handleRefresh}
+                                        onClick={handleRefresh}
                                     />
                                     <Button 
                                         variant="tertiary" 
@@ -3032,7 +3022,7 @@ const HomePage: React.FC = () => {
                                         </div>
                                     </div>
                                     <div className="activity-summary-cards">
-                                        {currentActivityData.cards.map((card, index) => (
+                                        {currentActivityData.cards.map((card) => (
                                             <div key={card.id} className={`activity-summary-card ${card.highlighted ? 'highlighted' : ''}`}>
                                                 <div className="activity-summary-header">
                                                     <div className="activity-summary-title-section">
@@ -3173,7 +3163,7 @@ const HomePage: React.FC = () => {
             )}
 
             {/* SUGGESTED ACTIONS VIEW - Full Width (REMOVED) */}
-            {false && viewMode === 'suggested-actions' && (
+            {false && (viewMode as string) === 'suggested-actions' && (
                 <div className="suggested-actions-fullwidth">
                     <div className="dashboard-card suggested-actions-card">
                         <div className="card-header">

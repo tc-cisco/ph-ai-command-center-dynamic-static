@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react'
-import { Avatar, Appheader, Button, Brandvisual, Divider, Badge, Toggle, Text } from '@momentum-design/components/react'
+import { Avatar, Appheader, Button, Brandvisual, Toggle, Text } from '@momentum-design/components/react'
 import { useLeftSection } from '../../contexts/LeftSectionContext'
 import './header.css';
 
