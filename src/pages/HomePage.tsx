@@ -19,6 +19,17 @@ const HomePage: React.FC = () => {
     const [selectedGrowthLevel, setSelectedGrowthLevel] = useState<'high-potential' | 'moderate' | 'some-room' | 'optimized'>('high-potential');
     const [submittedQuery, setSubmittedQuery] = useState('');
     
+    // Chat history state - EASILY REVERTABLE: Remove this and related JSX
+    const [chatHistory, setChatHistory] = useState<Array<{ 
+        role: 'user' | 'assistant'; 
+        content: string; 
+        timestamp: Date; 
+        type: 'renewal' | 'adoption' | 'other' 
+    }>>([]);
+    
+    // Chat sidebar minimized state
+    const [isChatMinimized, setIsChatMinimized] = useState(false);
+    
     // GenAI loading states
     const [isGenerating, setIsGenerating] = useState(false);
     const [generatingSteps, setGeneratingSteps] = useState<string[]>([]);
@@ -84,6 +95,15 @@ const HomePage: React.FC = () => {
                         setIsGenerating(false);
                         setIsPanelLoading(true);
                         
+                        // Add AI response to chat history after generating completes
+                        const aiResponse = panelType === 'renewal' 
+                            ? "I found customers at risk of churn. Here's an analysis of renewal risks across your portfolio."
+                            : "I identified growth opportunities. Here are customers where you can help increase adoption.";
+                        setChatHistory(prev => [
+                            ...prev,
+                            { role: 'assistant', content: aiResponse, timestamp: new Date(), type: panelType }
+                        ]);
+                        
                         if (panelType === 'renewal') {
                             setShowRenewalRisk(true);
                         } else {
@@ -134,6 +154,16 @@ const HomePage: React.FC = () => {
     const openTabsRef = useRef(openTabs);
     // Update ref synchronously on every render
     openTabsRef.current = openTabs;
+    
+    // Ref for chat list auto-scroll
+    const chatListRef = useRef<HTMLDivElement>(null);
+    
+    // Auto-scroll chat to bottom when new messages are added
+    useEffect(() => {
+        if (chatListRef.current) {
+            chatListRef.current.scrollTop = chatListRef.current.scrollHeight;
+        }
+    }, [chatHistory, isGenerating, generatingSteps]);
     // Also log when openTabs changes
     useEffect(() => {
         console.log('🔄 openTabs state changed:', openTabs);
@@ -450,8 +480,8 @@ const HomePage: React.FC = () => {
             cards: [
                 { id: '1', title: 'New customers onboarded', chip: '+2', chipType: 'positive', label: 'Onboarding', description: 'Acme corp and Nexus systems completed onboarding today.', highlighted: true },
                 { id: '2', title: 'Renewals completed', chip: '+1', chipType: 'positive', label: 'Renewals', description: '1 customer renewed their contract today.' },
-                { id: '3', title: 'Support tickets resolved', chip: '8', chipType: 'neutral', label: 'Support', description: '8 tickets closed with avg resolution time of 3.5 hours.' },
-                { id: '4', title: 'Health score changes', chip: '1 declined', chipType: 'warning', label: 'Health alerts', description: '1 customer moved to at-risk status. Prism analytics needs attention.' }
+                { id: '3', title: 'AI feature adoption', chip: '+8%', chipType: 'positive', label: 'AI adoption', description: 'AI Assistant usage increased 8% today. 124 new users activated AI features across 3 customers.' },
+                { id: '4', title: 'Calling outages resolved', chip: '2 fixed', chipType: 'positive', label: 'Service', description: '2 calling outages resolved today. Avg resolution time: 45 minutes. No ongoing incidents.' }
             ]
         },
         week: {
@@ -459,8 +489,8 @@ const HomePage: React.FC = () => {
             cards: [
                 { id: '1', title: 'New customers onboarded', chip: '+12', chipType: 'positive', label: 'Onboarding', description: 'CloudFirst solutions, Summit healthcare, and 10 others completed onboarding this week.', highlighted: true },
                 { id: '2', title: 'Renewals completed', chip: '+8', chipType: 'positive', label: 'Renewals', description: '8 customers renewed contracts this period. 100% renewal rate.' },
-                { id: '3', title: 'Support tickets resolved', chip: '47', chipType: 'neutral', label: 'Support', description: '47 tickets closed with avg resolution time of 4.2 hours. 3 escalations this week.' },
-                { id: '4', title: 'Health score changes', chip: '5 declined', chipType: 'warning', label: 'Health alerts', description: '5 customers moved to at-risk status. Velocity logistics, Metro industries need attention.' }
+                { id: '3', title: 'AI feature adoption', chip: '+15%', chipType: 'positive', label: 'AI adoption', description: 'AI Assistant usage up 15% this week. 890 new users enabled AI features. Top adopter: Summit Healthcare.' },
+                { id: '4', title: 'Calling outages resolved', chip: '7 fixed', chipType: 'positive', label: 'Service', description: '7 calling outages resolved this week. 99.8% uptime maintained across all customers.' }
             ]
         },
         month: {
@@ -468,8 +498,8 @@ const HomePage: React.FC = () => {
             cards: [
                 { id: '1', title: 'New customers onboarded', chip: '+34', chipType: 'positive', label: 'Onboarding', description: '34 new customers completed onboarding this month, a 15% increase from last month.', highlighted: true },
                 { id: '2', title: 'Renewals completed', chip: '+22', chipType: 'positive', label: 'Renewals', description: '22 customers renewed contracts. 96% renewal rate this month.' },
-                { id: '3', title: 'Support tickets resolved', chip: '186', chipType: 'neutral', label: 'Support', description: '186 tickets closed with avg resolution time of 4.8 hours. 12 escalations.' },
-                { id: '4', title: 'Health score changes', chip: '14 declined', chipType: 'warning', label: 'Health alerts', description: '14 customers moved to at-risk status. 8 have been re-engaged successfully.' }
+                { id: '3', title: 'AI feature adoption', chip: '+23%', chipType: 'positive', label: 'AI adoption', description: 'AI Assistant adoption increased 23% this month. 3,400 new users. 12 customers hit 50%+ AI activation.' },
+                { id: '4', title: 'Calling outages resolved', chip: '18 fixed', chipType: 'positive', label: 'Service', description: '18 calling outages resolved this month. Avg resolution: 38 min. 99.9% uptime achieved.' }
             ]
         },
         quarter: {
@@ -477,8 +507,8 @@ const HomePage: React.FC = () => {
             cards: [
                 { id: '1', title: 'New customers onboarded', chip: '+89', chipType: 'positive', label: 'Onboarding', description: '89 new customers onboarded this quarter. On track to exceed quarterly target by 12%.', highlighted: true },
                 { id: '2', title: 'Renewals completed', chip: '+67', chipType: 'positive', label: 'Renewals', description: '67 customers renewed. 94% renewal rate this quarter.' },
-                { id: '3', title: 'Support tickets resolved', chip: '542', chipType: 'neutral', label: 'Support', description: '542 tickets closed. Average satisfaction score of 4.6/5.' },
-                { id: '4', title: 'Health score changes', chip: '28 declined', chipType: 'warning', label: 'Health alerts', description: '28 customers moved to at-risk status. 19 successfully recovered.' }
+                { id: '3', title: 'AI feature adoption', chip: '+42%', chipType: 'positive', label: 'AI adoption', description: 'AI Assistant adoption up 42% this quarter. 12,000+ new AI users. 34 customers now above 60% AI activation.' },
+                { id: '4', title: 'Calling outages resolved', chip: '52 fixed', chipType: 'positive', label: 'Service', description: '52 calling outages resolved this quarter. Avg resolution improved 25%. 99.95% uptime across portfolio.' }
             ]
         }
     };
@@ -573,12 +603,14 @@ const HomePage: React.FC = () => {
         }
     };
 
-    const handleSendClick = () => {
-        // Don't submit if there's no search value
-        if (!mainSearchValue.trim()) return;
+    const handleSendClick = (directQuery?: string) => {
+        // Use direct query if provided, otherwise use mainSearchValue
+        const queryToUse = directQuery || mainSearchValue;
+        
+        if (!queryToUse.trim()) return;
         
         // Handle search submission with context
-        const searchQuery = selectedContext ? `${selectedContext}: ${mainSearchValue}` : mainSearchValue;
+        const searchQuery = selectedContext ? `${selectedContext}: ${queryToUse}` : queryToUse;
         console.log('🚀 Search submitted:', searchQuery);
         console.log('📋 Current openTabs at start of handleSendClick:', openTabs);
         console.log('📋 Current activeTab:', activeTab);
@@ -586,10 +618,11 @@ const HomePage: React.FC = () => {
         
         // Mark search as submitted to transition to chat-like layout
         setHasSearchSubmitted(true);
-        setSubmittedQuery(mainSearchValue);
+        setSubmittedQuery(queryToUse);
+        setMainSearchValue(queryToUse);
         
         // Determine which panel this search should show
-        const query = mainSearchValue.toLowerCase();
+        const query = queryToUse.toLowerCase();
         const isRenewalQuery = query.includes('renewal risk') || 
                                query.includes('customers at renewal risk') ||
                                query.includes('customers at risk') ||
@@ -616,6 +649,14 @@ const HomePage: React.FC = () => {
         // Tab-based logic for renewal/adoption panels
         // Use ref to get latest value (avoid stale closure issues)
         const currentOpenTabs = openTabsRef.current;
+        
+        // Add user message to chat history - EASILY REVERTABLE: Remove this block
+        // AI response is added after generating completes (in startGenerating function)
+        const historyType = isRenewalQuery ? 'renewal' : isAdoptionQuery ? 'adoption' : 'other';
+        setChatHistory(prev => [
+            ...prev, 
+            { role: 'user', content: queryToUse, timestamp: new Date(), type: historyType }
+        ]);
         
         if (isRenewalQuery) {
             console.log('🔍 Renewal query detected, currentOpenTabs:', currentOpenTabs);
@@ -649,43 +690,14 @@ const HomePage: React.FC = () => {
             return;
         }
         
-        // For non-tabbed panels, reset tab state and show the appropriate panel
-        setOpenTabs([]);
-        setActiveTab(null);
-        setShowRenewalRisk(false);
-        setShowAdoptionGrowth(false);
-        
-        // If the relevant panel is already open, don't restart animation - just keep it
-        if (isCustomerSummaryQuery && showCustomerSummary) {
-            return;
-        }
-        if (isCustomerGroupsQuery && showCustomerGroups) {
-            return;
-        }
-        if (isMeetingsQuery && showMeetingsAnalysis) {
-            return;
-        }
-        
-        // Reset non-tabbed panels
-        setShowCustomerSummary(false);
-        setShowCustomerGroups(false);
-        setShowMeetingsAnalysis(false);
-        setShowGenericResponse(false);
-        
-        // Show the appropriate panel
-        if (isCustomerSummaryQuery) {
-            setShowCustomerSummary(true);
-        }
-        else if (isCustomerGroupsQuery) {
-            setShowCustomerGroups(true);
-        }
-        else if (isMeetingsQuery) {
-            setShowMeetingsAnalysis(true);
-        }
-        // Show generic response for any other query
-        else {
-            setShowGenericResponse(true);
-        }
+        // Generic query - just add to chat without opening a tab
+        // The AI will prompt for more specific information with suggestion buttons
+        console.log('🔍 Generic query detected - prompting for more info');
+        const aiResponse = "I'd be happy to help! Could you tell me more about what you're looking for?";
+        setChatHistory(prev => [
+            ...prev,
+            { role: 'assistant', content: aiResponse, timestamp: new Date(), type: 'other' }
+        ]);
     };
 
     const handleClearContext = () => {
@@ -702,6 +714,8 @@ const HomePage: React.FC = () => {
         setOpenTabs([]);
         setActiveTab(null);
         setFullyLoadedPanels(new Set());
+        // Clear chat history
+        setChatHistory([]);
         // Reset generating and loading states
         setIsGenerating(false);
         setIsPanelLoading(false);
@@ -1042,7 +1056,180 @@ const HomePage: React.FC = () => {
                         
                         {/* Results area - shown after search submission */}
                         {hasSearchSubmitted && (
-                            <div className="workspace-results-area">
+                            <div className="workspace-results-area workspace-two-column">
+                                {/* Chat History Sidebar - EASILY REVERTABLE: Remove this entire section */}
+                                <div className={`chat-history-sidebar ${isChatMinimized ? 'minimized' : ''}`}>
+                                    <div className="chat-history-header">
+                                        <div className="chat-header-left">
+                                            <Icon name="chat-regular" />
+                                            <span>Chat</span>
+                                        </div>
+                                        <button 
+                                            className="chat-minimize-btn"
+                                            onClick={() => setIsChatMinimized(!isChatMinimized)}
+                                            aria-label={isChatMinimized ? "Expand chat" : "Minimize chat"}
+                                        >
+                                            <Icon name={isChatMinimized ? "arrow-right-regular" : "arrow-left-regular"} />
+                                        </button>
+                                    </div>
+                                    <div className="chat-history-list" ref={chatListRef}>
+                                        {chatHistory.map((item, index) => (
+                                            <div 
+                                                key={index} 
+                                                className={`chat-message ${item.role} ${item.type}`}
+                                                onClick={() => {
+                                                    // Switch to the corresponding tab when clicking AI response
+                                                    // Re-open the tab if it was closed
+                                                    if (item.role === 'assistant') {
+                                                        if (item.type === 'renewal') {
+                                                            if (!openTabs.includes('renewal')) {
+                                                                setOpenTabs(prev => [...prev, 'renewal']);
+                                                                setShowRenewalRisk(true);
+                                                                // Mark as fully loaded since we already generated it
+                                                                setFullyLoadedPanels(prev => new Set([...prev, 'renewal']));
+                                                                setLoadedSections({
+                                                                    header: true,
+                                                                    summary: true,
+                                                                    metrics: true,
+                                                                    chart: true,
+                                                                    table: true,
+                                                                });
+                                                            }
+                                                            setActiveTab('renewal');
+                                                        } else if (item.type === 'adoption') {
+                                                            if (!openTabs.includes('adoption')) {
+                                                                setOpenTabs(prev => [...prev, 'adoption']);
+                                                                setShowAdoptionGrowth(true);
+                                                                // Mark as fully loaded since we already generated it
+                                                                setFullyLoadedPanels(prev => new Set([...prev, 'adoption']));
+                                                                setLoadedSections({
+                                                                    header: true,
+                                                                    summary: true,
+                                                                    metrics: true,
+                                                                    chart: true,
+                                                                    table: true,
+                                                                });
+                                                            }
+                                                            setActiveTab('adoption');
+                                                        }
+                                                    }
+                                                }}
+                                            >
+                                                {item.role === 'user' ? (
+                                                    <div className="user-message">
+                                                        <div className="user-content">
+                                                            <span className="message-content">{item.content}</span>
+                                                        </div>
+                                                        <div className="user-avatar">
+                                                            <img src="https://picsum.photos/id/8/5000/3333" alt="User" />
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <div className="assistant-message">
+                                                        <div className="assistant-icon">
+                                                            <Icon name="sparkle-regular" />
+                                                        </div>
+                                                        <div className="assistant-content">
+                                                            <span className="message-content">{item.content}</span>
+                                                            {item.type !== 'other' && (
+                                                                <span className="message-action">View details →</span>
+                                                            )}
+                                                            {item.type === 'other' && (
+                                                                <div className="suggestion-buttons">
+                                                                    <button 
+                                                                        className="suggestion-btn"
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            handleSendClick('Show me customers at renewal risk');
+                                                                        }}
+                                                                    >
+                                                                        <Icon name="alert-active-regular" />
+                                                                        <span>Show me customers at renewal risk</span>
+                                                                    </button>
+                                                                    <button 
+                                                                        className="suggestion-btn"
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            handleSendClick('Which customers can I help increase adoption?');
+                                                                        }}
+                                                                    >
+                                                                        <Icon name="trending-regular" />
+                                                                        <span>Which customers can I help increase adoption?</span>
+                                                                    </button>
+                                                                    <button 
+                                                                        className="suggestion-btn"
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            // Navigate to Customer portfolio under Catch up
+                                                                            setViewMode('control-center');
+                                                                            setSummaryTab('data');
+                                                                        }}
+                                                                    >
+                                                                        <Icon name="dashboard-regular" />
+                                                                        <span>What's the health status of my portfolio?</span>
+                                                                    </button>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
+                                        
+                                        {/* Generating Animation in Chat - EASILY REVERTABLE */}
+                                        {isGenerating && (
+                                            <div className="chat-message assistant generating">
+                                                <div className="assistant-message">
+                                                    <div className="assistant-icon generating-pulse">
+                                                        <Icon name="sparkle-regular" />
+                                                    </div>
+                                                    <div className="assistant-content generating-content">
+                                                        <span className="generating-title">
+                                                            {pendingPanel === 'renewal' ? 'Analyzing renewal risk...' : 'Analyzing growth opportunities...'}
+                                                        </span>
+                                                        <div className="generating-steps-chat">
+                                                            {generatingSteps.map((step, index) => (
+                                                                <div 
+                                                                    key={index} 
+                                                                    className={`generating-step-chat ${index === currentStepIndex ? 'active' : 'completed'}`}
+                                                                >
+                                                                    <span className="step-indicator-chat">
+                                                                        {index < currentStepIndex ? '✓' : index === currentStepIndex ? '•' : ''}
+                                                                    </span>
+                                                                    <span className="step-text-chat">{step}</span>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                    {/* Search Input in Sidebar */}
+                                    <div className="chat-search-input">
+                                        <div className="chat-search-wrapper">
+                                            <input
+                                                type="text"
+                                                placeholder="Ask a follow-up..."
+                                                value={mainSearchValue}
+                                                onChange={handleMainSearchChange}
+                                                onKeyDown={handleMainSearchKeyDown}
+                                                className="chat-input"
+                                            />
+                                            <Button 
+                                                variant="tertiary" 
+                                                size={24} 
+                                                prefixIcon="send-filled" 
+                                                aria-label="send" 
+                                                className="chat-send-btn"
+                                                onClick={handleSendClick}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                {/* Main Panel Area */}
+                                <div className="workspace-panels-area">
                                 {showCustomerSummary && (
                                     <div className="workspace-result-panel">
                                         <div className="panel-header">
@@ -1128,7 +1315,8 @@ const HomePage: React.FC = () => {
                                     </div>
                                 )}
                                 
-                                {/* GenAI Generating State */}
+                                {/* GenAI Generating State - MOVED TO CHAT SIDEBAR
+                                   To revert: uncomment this block and remove the generating animation from chat-history-list
                                 {isGenerating && (
                                     <div className="generating-panel">
                                         <div className="generating-header">
@@ -1158,6 +1346,7 @@ const HomePage: React.FC = () => {
                                         </div>
                                     </div>
                                 )}
+                                */}
                                 
                                 {/* UNIFIED TAB SYSTEM - EASILY REVERTABLE:
                                     1. Remove this entire openTabs.length > 0 block
@@ -1213,6 +1402,7 @@ const HomePage: React.FC = () => {
                                                                     return newSet;
                                                                 });
                                                                 // If closing active tab, switch to another tab or clear
+                                                                // NOTE: Chat persists even when all tabs are closed
                                                                 if (activeTab === tab) {
                                                                     if (newOpenTabs.length > 0) {
                                                                         setActiveTab(newOpenTabs[0]);
@@ -1228,8 +1418,7 @@ const HomePage: React.FC = () => {
                                                                         }
                                                                     } else {
                                                                         setActiveTab(null);
-                                                                        setHasSearchSubmitted(false);
-                                                                        setMainSearchValue('');
+                                                                        // Don't reset hasSearchSubmitted - keep chat visible
                                                                     }
                                                                 }
                                                                 // Also update the show states for compatibility
@@ -1900,6 +2089,7 @@ const HomePage: React.FC = () => {
                                         </div>{/* panel-tab-content for adoption */}
                                         </>
                                         )}
+
                                     </div>
                                 )}
                                 
@@ -1922,35 +2112,8 @@ const HomePage: React.FC = () => {
                                     </div>
                                 )}
                                 */}
-                                {showGenericResponse && (
-                                    <div className="workspace-result-panel">
-                                        <div className="panel-header">
-                                            <Text type="heading-small-bold" tagname="h3">AI Response</Text>
-                                            <Button 
-                                                variant="tertiary" 
-                                                size={24} 
-                                                prefixIcon="cancel-regular" 
-                                                aria-label="Close panel"
-                                                onClick={() => {
-                                                    setShowGenericResponse(false);
-                                                    setHasSearchSubmitted(false);
-                                                    setMainSearchValue('');
-                                                }}
-                                            />
-                                        </div>
-                                        <div className="panel-content">
-                                            <Text type="body-small-medium" className="query-echo">"{submittedQuery}"</Text>
-                                            <Text type="body-midsize-regular" style={{ marginTop: '12px' }}>
-                                                I'm analyzing your request. Here's what I found based on your customer data and recent activity...
-                                            </Text>
-                                            <ul className="summary-list">
-                                                <li>Your portfolio includes 142 active customers across 12 segments</li>
-                                                <li>8 customers require immediate attention based on health scores</li>
-                                                <li>Recent engagement trends show positive momentum overall</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                )}
+{/* showGenericResponse panel removed - generic queries now handled via chat prompts */}
+                                </div>{/* Close workspace-panels-area */}
                             </div>
                         )}
                                 
@@ -2449,7 +2612,180 @@ const HomePage: React.FC = () => {
 
             {/* OVERVIEW VIEW - Full Width Dashboard */}
             {viewMode === 'control-center' && (
-                <div className="overview-fullwidth">
+                <div className="overview-fullwidth overview-two-column">
+                    {/* Chat Sidebar for Catch Up view */}
+                    <div className={`chat-history-sidebar ${isChatMinimized ? 'minimized' : ''}`}>
+                        <div className="chat-history-header">
+                            <div className="chat-header-left">
+                                <Icon name="chat-regular" />
+                                <span>Chat</span>
+                            </div>
+                            <button 
+                                className="chat-minimize-btn"
+                                onClick={() => setIsChatMinimized(!isChatMinimized)}
+                                aria-label={isChatMinimized ? "Expand chat" : "Minimize chat"}
+                            >
+                                <Icon name={isChatMinimized ? "arrow-right-regular" : "arrow-left-regular"} />
+                            </button>
+                        </div>
+                        <div className="chat-history-list" ref={chatListRef}>
+                            {chatHistory.map((item, index) => (
+                                <div 
+                                    key={index} 
+                                    className={`chat-message ${item.role} ${item.type}`}
+                                    onClick={() => {
+                                        if (item.role === 'assistant') {
+                                            if (item.type === 'renewal') {
+                                                setViewMode('workspace');
+                                                if (!openTabs.includes('renewal')) {
+                                                    setOpenTabs(prev => [...prev, 'renewal']);
+                                                    setShowRenewalRisk(true);
+                                                    setFullyLoadedPanels(prev => new Set([...prev, 'renewal']));
+                                                    setLoadedSections({ header: true, summary: true, metrics: true, chart: true, table: true });
+                                                }
+                                                setActiveTab('renewal');
+                                                setHasSearchSubmitted(true);
+                                            } else if (item.type === 'adoption') {
+                                                setViewMode('workspace');
+                                                if (!openTabs.includes('adoption')) {
+                                                    setOpenTabs(prev => [...prev, 'adoption']);
+                                                    setShowAdoptionGrowth(true);
+                                                    setFullyLoadedPanels(prev => new Set([...prev, 'adoption']));
+                                                    setLoadedSections({ header: true, summary: true, metrics: true, chart: true, table: true });
+                                                }
+                                                setActiveTab('adoption');
+                                                setHasSearchSubmitted(true);
+                                            }
+                                        }
+                                    }}
+                                >
+                                    {item.role === 'user' ? (
+                                        <div className="user-message">
+                                            <div className="user-content">
+                                                <span className="message-content">{item.content}</span>
+                                            </div>
+                                            <div className="user-avatar">
+                                                <img src="https://picsum.photos/id/8/5000/3333" alt="User" />
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="assistant-message">
+                                            <div className="assistant-icon">
+                                                <Icon name="sparkle-regular" />
+                                            </div>
+                                            <div className="assistant-content">
+                                                <span className="message-content">{item.content}</span>
+                                                {item.type !== 'other' && (
+                                                    <span className="message-action">View details →</span>
+                                                )}
+                                                {item.type === 'other' && (
+                                                    <div className="suggestion-buttons">
+                                                        <button 
+                                                            className="suggestion-btn"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                setViewMode('workspace');
+                                                                handleSendClick('Show me customers at renewal risk');
+                                                            }}
+                                                        >
+                                                            <Icon name="alert-active-regular" />
+                                                            <span>Show me customers at renewal risk</span>
+                                                        </button>
+                                                        <button 
+                                                            className="suggestion-btn"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                setViewMode('workspace');
+                                                                handleSendClick('Which customers can I help increase adoption?');
+                                                            }}
+                                                        >
+                                                            <Icon name="trending-regular" />
+                                                            <span>Which customers can I help increase adoption?</span>
+                                                        </button>
+                                                        <button 
+                                                            className="suggestion-btn"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                setSummaryTab('data');
+                                                            }}
+                                                        >
+                                                            <Icon name="dashboard-regular" />
+                                                            <span>What's the health status of my portfolio?</span>
+                                                        </button>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                            
+                            {/* Generating Animation */}
+                            {isGenerating && (
+                                <div className="chat-message assistant generating">
+                                    <div className="assistant-message">
+                                        <div className="assistant-icon generating-pulse">
+                                            <Icon name="sparkle-regular" />
+                                        </div>
+                                        <div className="assistant-content generating-content">
+                                            <span className="generating-title">
+                                                {pendingPanel === 'renewal' ? 'Analyzing renewal risk...' : 'Analyzing growth opportunities...'}
+                                            </span>
+                                            <div className="generating-steps-chat">
+                                                {generatingSteps.map((step, index) => (
+                                                    <div 
+                                                        key={index} 
+                                                        className={`generating-step-chat ${index === currentStepIndex ? 'active' : 'completed'}`}
+                                                    >
+                                                        <span className="step-indicator-chat">
+                                                            {index < currentStepIndex ? '✓' : index === currentStepIndex ? '•' : ''}
+                                                        </span>
+                                                        <span className="step-text-chat">{step}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                        {/* Search Input */}
+                        <div className="chat-search-input">
+                            <div className="chat-search-wrapper">
+                                <input
+                                    type="text"
+                                    placeholder="Ask a follow-up..."
+                                    value={mainSearchValue}
+                                    onChange={handleMainSearchChange}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' && mainSearchValue.trim()) {
+                                            setViewMode('workspace');
+                                            setHasSearchSubmitted(true);
+                                            handleSendClick();
+                                        }
+                                    }}
+                                    className="chat-input"
+                                />
+                                <Button 
+                                    variant="tertiary" 
+                                    size={24} 
+                                    prefixIcon="send-filled" 
+                                    aria-label="send" 
+                                    className="chat-send-btn"
+                                    onClick={() => {
+                                        if (mainSearchValue.trim()) {
+                                            setViewMode('workspace');
+                                            setHasSearchSubmitted(true);
+                                            handleSendClick();
+                                        }
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {/* Main Catch Up Content */}
+                    <div className="overview-content">
                         {/* Welcome Card with Tabs */}
                         <div className="dashboard-card welcome-summary-card">
                             <div className="card-header welcome-header">
@@ -2499,12 +2835,6 @@ const HomePage: React.FC = () => {
                                         AI summary
                                     </button>
                                     <button 
-                                        className={`summary-tab ${summaryTab === 'data' ? 'active' : ''}`}
-                                        onClick={() => setSummaryTab('data')}
-                                    >
-                                        Customer portfolio
-                                    </button>
-                                    <button 
                                         className={`summary-tab ${summaryTab === 'activity' ? 'active' : ''}`}
                                         onClick={() => setSummaryTab('activity')}
                                     >
@@ -2515,6 +2845,12 @@ const HomePage: React.FC = () => {
                                         onClick={() => setSummaryTab('insights')}
                                     >
                                         Insights
+                                    </button>
+                                    <button 
+                                        className={`summary-tab ${summaryTab === 'data' ? 'active' : ''}`}
+                                        onClick={() => setSummaryTab('data')}
+                                    >
+                                        Customer portfolio
                                     </button>
                                 </div>
                             )}
@@ -2832,6 +3168,7 @@ const HomePage: React.FC = () => {
                                 </div>
                             )}
                         </div>
+                    </div>
                 </div>
             )}
 
