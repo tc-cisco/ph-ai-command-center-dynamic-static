@@ -9,6 +9,23 @@
     <link rel="stylesheet" crossorigin href="/ph-ai-command-center-dynamic-static/assets/index-rbluXfC6.css">
   </head>
   <body class="mds-typography">
+    <!-- PASSWORD GATE - DELETE THIS ENTIRE SCRIPT BLOCK TO REMOVE -->
+    <script>
+      (function() {
+        const PASSWORD = 'partnerhub2026';
+        const stored = sessionStorage.getItem('auth');
+        if (stored !== PASSWORD) {
+          const input = prompt('Enter password:');
+          if (input !== PASSWORD) {
+            document.body.innerHTML = '<h1 style="color:white;font-family:sans-serif;text-align:center;margin-top:100px;">Access denied</h1>';
+            throw new Error('Access denied');
+          }
+          sessionStorage.setItem('auth', PASSWORD);
+        }
+      })();
+    </script>
+    <!-- END PASSWORD GATE -->
+
     <div id="root">
         <!-- Views update here -->
     </div>
