@@ -320,32 +320,32 @@ const HomePage: React.FC = () => {
         switch (level) {
             case 'trending':
                 return {
-                    text: 'Act fast on newly at-risk accounts. Partner AI can help you understand what changed and suggest immediate interventions.',
+                    text: 'Act fast on newly at-risk accounts. AI Assistant can help you understand what changed and suggest immediate interventions.',
                     buttons: ['Analyze usage drop', 'Schedule check-in calls']
                 };
             case 'high':
                 return {
-                    text: 'Engage high-risk customers early. Partner AI can draft an outreach summary or generate a prioritized playbook.',
+                    text: 'Engage high-risk customers early. AI Assistant can draft an outreach summary or generate a prioritized playbook.',
                     buttons: ['Share customer list', 'Draft outreach summary']
                 };
             case 'medium':
                 return {
-                    text: 'Stabilize medium-risk accounts before they escalate. Partner AI can help identify engagement opportunities and training gaps.',
+                    text: 'Stabilize medium-risk accounts before they escalate. AI Assistant can help identify engagement opportunities and training gaps.',
                     buttons: ['Create engagement plan', 'Schedule training sessions']
                 };
             case 'low':
                 return {
-                    text: 'Keep low-risk customers on track with light-touch engagement. Partner AI can set up automated health monitoring.',
+                    text: 'Keep low-risk customers on track with light-touch engagement. AI Assistant can set up automated health monitoring.',
                     buttons: ['Set up health alerts', 'Send satisfaction survey']
                 };
             case 'healthy':
                 return {
-                    text: 'Maximize value from healthy accounts. Partner AI can identify expansion opportunities and generate case studies.',
+                    text: 'Maximize value from healthy accounts. AI Assistant can identify expansion opportunities and generate case studies.',
                     buttons: ['Find upsell opportunities', 'Request testimonials']
                 };
             default:
                 return {
-                    text: 'Engage high-risk customers early. Partner AI can draft an outreach summary or generate a prioritized playbook.',
+                    text: 'Engage high-risk customers early. AI Assistant can draft an outreach summary or generate a prioritized playbook.',
                     buttons: ['Share customer list', 'Draft outreach summary']
                 };
         }
@@ -1841,7 +1841,7 @@ const HomePage: React.FC = () => {
                                                             <div className="recommended-card-bg"></div>
                                                             <div className="recommended-card-content">
                                                                 <p className="recommended-text">
-                                                                    Drive adoption with targeted enablement. Partner AI can create personalized training plans 
+                                                                    Drive adoption with targeted enablement. AI Assistant can create personalized training plans 
                                                                     or feature adoption campaigns.
                                                                 </p>
                                                                 <div className="recommended-buttons">

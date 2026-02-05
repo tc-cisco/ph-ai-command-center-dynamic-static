@@ -5,6 +5,7 @@ import LabsPage from './pages/LabsPage'
 import CustomersPage from './pages/CustomersPage'
 import CustomerDetailsPage from './pages/CustomerDetailsPage'
 import CreateWholesaleCustomerWizard from './pages/CreateWholesaleCustomerWizard'
+import UxIdeationPage from './pages/UxIdeationPage'
 import '@momentum-design/fonts/dist/css/fonts.css';
 import '@momentum-design/tokens/dist/css/components/complete.css';
 import { ThemeProvider, IconProvider } from '@momentum-design/components/react'
@@ -29,6 +30,8 @@ function App() {
         return <HomePage />
       case 'labs':
         return <LabsPage />
+      case 'ux-ideation':
+        return <UxIdeationPage />
       case 'customers':
         return <CustomersPage onPageChange={handlePageChange} />
       case 'customer-details':

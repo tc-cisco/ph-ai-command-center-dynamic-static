@@ -41,6 +41,13 @@ const SideNav: React.FC<SideNavProps> = ({ isSideNavExpanded, setIsSideNavExpand
                         active={currentPage === 'labs'}
                         onClick={() => handleNavItemClick('labs')}
                     ></NavMenuItem>
+                    <NavMenuItem 
+                        iconName="explore-regular" 
+                        navId="ux-ideation" 
+                        label="UX Ideation"
+                        active={currentPage === 'ux-ideation'}
+                        onClick={() => handleNavItemClick('ux-ideation')}
+                    ></NavMenuItem>
                 </MenuSection>
                 <MenuSection slot="scrollable-menubar" showDivider headerText="Management">
                     <NavMenuItem 
